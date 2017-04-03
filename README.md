@@ -20,7 +20,7 @@ You now have an input file with a bunch of five letter English words, time to ru
 
 ### Running the script
 
-The script takes no parameters. It expects input.txt in the same folder, and will print to STDOUT. If you want to save the result (you probably do), run something like this:
+The script takes no parameters. It expects `input.txt` in the same folder, and will print to STDOUT. If you want to save the result (you probably do), run something like this:
 
 `./murder.py | tee output.txt`
 
