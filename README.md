@@ -8,7 +8,7 @@ The first thing you need is an input file. The second thing you need is patience
 
 ### Creating an input file from dictionaries
 
-One way to look for short, memorable names is to generate an input file from dictionaries. For example, you could grab this file:
+One way to look for short, memorable names is to generate an input file from dictionaries. For example, you could grab this:
 
 `git clone https://github.com/dwyl/english-words.git`
 
