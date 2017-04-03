@@ -38,4 +38,4 @@ If you run queries faster than this, twitter will rate-limit you. Therefore, the
 
 ## License
 
-This project is in the public domain - see the [LICENSE.md](LICENSE.md) file for details.
+This project is in the public domain - see the [LICENSE](LICENSE) file for details.
