@@ -30,6 +30,8 @@ When the script is done, an easy way to show all available names is to do the fo
 
 `grep AVAILABLE output.txt`
 
+**Do not access any of the text files while the script is running**. The script will remove invalid names from your `input.txt` after every query, so that if it crashes you won't have to re-run names that are taken, only re-validate probably available ones, which should be few. The `output.txt` file will obviously be handled by `tee` and it will stop writing to the file if it detects someone tampering with it.
+
 ### Why is it so slow?
 
 If you run queries faster than this, twitter will rate-limit you. Therefore, the script has a pause between every query. Probably you prefer for all your queries to go through and not crash half way before speed. That being said, if you have less than 200 queries, you could comment out the timer:
