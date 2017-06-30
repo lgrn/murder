@@ -30,6 +30,8 @@ When the script is done, an easy way to show all available names is to do the fo
 
 `grep AVAILABLE output.txt`
 
+...or just have a look in `input.txt` since it will only contain available names.
+
 **Do not access any of the text files while the script is running**. The script will remove invalid names from your `input.txt` after every query, so that if it crashes you won't have to re-run names that are taken, only re-validate probably available ones, which should be few. The `output.txt` file will obviously be handled by `tee` and it will stop writing to the file if it detects someone tampering with it.
 
 ### Why is it so slow?
