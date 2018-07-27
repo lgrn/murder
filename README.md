@@ -38,8 +38,6 @@ If you run queries faster than what the script limits you to, twitter will rate-
 
 `sleep_seconds = 8`
 
-#### I have places to be
-
 Some examples of time required:
 
 | Words  | sleep_seconds | Hours required | Days required |
