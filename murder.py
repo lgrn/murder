@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# murder 0.1
+# murder 0.2
 
 import time
 import requests
@@ -8,7 +8,7 @@ import json
 import re
 import sys
 
-# Your "filename" file should contain one name per row. Don't worry about
+# Your "filename" file should contain one word per row. Don't worry about
 # newlines and whitespace, it will be stripped. Any names containing anything
 # but A-Z/a-z, underscores and numbers will be skipped and not queried.
 # 
@@ -21,21 +21,19 @@ import sys
 filename = "input.txt"
 
 with open(filename) as f:
-    lines = [line.strip().strip('\n') for line in open(filename)]
+     lines = [line.strip().strip('\n') for line in open(filename)]
 
-print("Done importing: {}. Running twitter API calls now.".format(filename))
+pretty_amount = "{:,}".format(len(lines))
+
+print("Step 1: Imported {} words from {}.".format(pretty_amount,filename))
 
 # This regex pattern validates usernames.
 
 pattern = re.compile("^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$")
 
-# Print feedback to stdout
-
 sys.stdout.flush()
 
-# This function will check if a name is available, then wait 10 seconds.
-# It waits because twitter has a rate limit of 200/15min (?), so this will
-# run at most 90 (less than half) in that same period.
+# This function will check if a name is available:
 
 def is_available(username):
     url = ("https://twitter.com/users/username_available"
@@ -44,7 +42,7 @@ def is_available(username):
     "&value=" + username.lower())
     response = requests.get(url)
     data = json.loads(response.text)
-    time.sleep(10)
+    
     if data.get("reason") == "available":
         return True
     else:
@@ -55,35 +53,62 @@ def is_available(username):
 # It feels a lot like making a cake with a hammer and a blow torch,
 # but I'm not good with computers.
 
-def delete_row(r):
-    f = open("input.txt", "r")
-    lines = f.readlines()
+# def delete_row(r):
+    # f = open("input.txt", "r")
+    # lines = f.readlines()
+    # f.close()
+    # f = open("input.txt", "w")
+    # for line in lines:
+        # if line != r + "\n":
+            # f.write(line)
+
+# delete_row hammers IO so it's disabled by default, it was introduced
+# in 0.1 and I am ashamed of it on a daily basis.
+
+# write_available below will be used in case of AVAILABLE
+
+def write_available(i):
+    f = open("output.txt", "a")
+    f.write(i)
     f.close()
-    f = open("input.txt", "w")
-    for line in lines:
-        if line != r + "\n":
-            f.write(line)
 
 failed_tries = 0
 ok_tries = 0
 
+# Let's clean up our "lines" array first so it only contains stuff we
+# actually want to throw at the API.
+
+clean_lines = []
+
 for i in lines:
-    if pattern.match(i):
+    if pattern.match(i) and len(str(i)) == 5:
+        clean_lines.append(i)
+
+# NOTE: "Compliant" below is decided by the for loop above.
+        
+pretty_amount = "{:,}".format(len(clean_lines))
+print("Step 2: Cleaned up import to only include compliant words. We now have {} words.".format(pretty_amount))
+
+# NOTE: time.sleep waits because twitter has a rate limit of 200/15min (?), 
+# so this will run at most 90 (less than half) in that same period.
+
+sleep_seconds = 8
+
+for i in clean_lines:
+    sys.stdout.flush()
+    if is_available(i):
+        print("[AVAILABLE] '{}'! Saving it to output.txt and stalling for next API call.".format(i.lower()))
+        ok_tries += 1
+        write_available(i)
         sys.stdout.flush()
-        if is_available(i):
-            print("[AVAILABLE] '{}'".format(i.lower()))
-            ok_tries += 1
-            sys.stdout.flush()
-        else:
-            print("[  TAKEN  ] '{}'. Deleting.".format(i.lower()))
-            failed_tries += 1
-            delete_row(i)
+        time.sleep(sleep_seconds)
     else:
-        sys.stdout.flush()
-        print(    "[ IGNORED ] '{}'. Deleting.".format(i.lower()))
-        delete_row(i)
+        print("[  TAKEN  ] '{}'. Too bad. Stalling for next API call.".format(i.lower()))
+        failed_tries += 1
+        #delete_row(i)
+        time.sleep(sleep_seconds)
 
 total_tries = failed_tries + ok_tries
 
-print("Script finished. Twitter was hit with {} queries.".format(total_tries))
-print("We found {} available names.".format(ok_tries))
+print("Script finished. Twitter was hit with {} queries. We found {} available names, saved to output.txt".format(total_tries,ok_tries))
+
