@@ -12,33 +12,31 @@ One way to look for short, memorable names is to generate an input file from dic
 
 `git clone https://github.com/dwyl/english-words.git`
 
-The shortest allowed name on twitter is five characters, so you could do this to fetch only those words into a new file:
-
-`grep -e "^.....$" words.txt > input.txt`
-
-You now have an input file with a bunch of five letter English words, time to run them against the twitter api
-
 ### Running the script
 
-The script takes no parameters. It expects `input.txt` in the same folder, and will print to STDOUT. If you want to save the result (you probably do), run something like this:
+The script takes no parameters. It expects `input.txt` in the same folder, and will print to STDOUT. If matches are found, they are appended to `output.txt`.
 
-`./murder.py | tee output.txt`
+### Example usage
 
-The script will give you feedback after each try. This may seem annoying, but it's a good way to see that the script is still working.
+```
+> python .\murder.py
+Step 1: Imported 180,165 words from input.txt.
+Step 2: Cleaned up import to only include compliant words. We now have 9,083 words.
+[  TAKEN  ] 'abaft'. Too bad. Stalling for next API call.
+[  TAKEN  ] 'abaka'. Too bad. Stalling for next API call.
+[  TAKEN  ] 'abama'. Too bad. Stalling for next API call.
+[  TAKEN  ] 'abamp'. Too bad. Stalling for next API call.
+[  TAKEN  ] 'abana'. Too bad. Stalling for next API call.
+(...)
+```
 
-When the script is done, an easy way to show all available names is to do the following:
-
-`grep AVAILABLE output.txt`
-
-...or just have a look in `input.txt` since it will only contain available names.
-
-**Do not access any of the text files while the script is running**. The script will remove invalid names from your `input.txt` after every query, so that if it crashes you won't have to re-run names that are taken, only re-validate probably available ones, which should be few. The `output.txt` file will obviously be handled by `tee` and it will stop writing to the file if it detects someone tampering with it.
+This is really as fun as it gets.
 
 ### Why is it so slow?
 
-If you run queries faster than this, twitter will rate-limit you. Therefore, the script has a pause between every query. Probably you prefer for all your queries to go through and not crash half way before speed. That being said, if you have less than 200 queries, you could comment out the timer:
+If you run queries faster than what the script limits you to, twitter will rate-limit you. Therefore, the script has a pause between every query. If you have less than 200 queries, you could change the timer in the script:
 
-`# time.sleep(10)`
+`sleep_seconds = 8`
 
 ## License
 
