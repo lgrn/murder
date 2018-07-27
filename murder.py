@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# murder 0.2
+# murder 0.2.1
 
 import time
 import requests
@@ -41,7 +41,11 @@ def is_available(username):
     "element%5D=screen_name&username=" + username.lower() +
     "&value=" + username.lower())
     response = requests.get(url)
-    data = json.loads(response.text)
+    try:
+        data = json.loads(response.text)
+    except Exception:
+        print('[  JSON!  ] Malformed JSON detected: ', response.text)
+        pass
     
     if data.get("reason") == "available":
         return True
@@ -97,7 +101,7 @@ sleep_seconds = 8
 for i in clean_lines:
     sys.stdout.flush()
     if is_available(i):
-        print("[AVAILABLE] '{}'! Saving it to output.txt and stalling for next API call.".format(i.lower()))
+        print("[AVAILABLE] '{}'! Saving to output.txt, stalling for next API call.".format(i.lower()))
         ok_tries += 1
         write_available(i)
         sys.stdout.flush()
