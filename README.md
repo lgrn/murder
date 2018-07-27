@@ -45,7 +45,7 @@ Some examples of time required:
 | Words  | sleep_seconds | Hours required | Days required |
 | ------ | ------------- | -------------- | ------------- |
 | 10,000 | 8             | 22.2           |               |
-|100,000 | 8             |                | 9,2           |
+|100,000 | 8             |                | 9.2           |
 
 ## License
 
