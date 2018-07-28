@@ -58,9 +58,6 @@ def is_available(username):
         print('[  JSON!  ] You should stop for now and/or adjust your sleep_timer ) ')
         print('[  JSON!  ] ValueError for this request: ')
         print(url)
-        print('[  JSON!  ] Assuming its unavailable and attempting to move on.')
-        reason = "unavailable"
-        pass
 
     if reason == "available":
         return True
