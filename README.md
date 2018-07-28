@@ -16,18 +16,22 @@ One way to look for short, memorable names is to generate an input file from dic
 
 The script takes no parameters. It expects `input.txt` in the same folder, and will print to STDOUT. If matches are found, they are appended to `output.txt`. If a name is detected to be unavailable, it will be saved to `unavailable.txt`. If this file exists when the script is run, any entries in it will be disregarded before making API calls.
 
-### Why is it so slow?
+#### Input file vs. What is actually queried
 
-If you run queries faster than what the script limits you to, twitter will rate-limit you. Therefore, the script has a pause between every query. If you have less than 200 queries, you could change the timer in the script:
-
-`sleep_seconds = 6`
-
-The default configuration is very conservative and only runs valid usernames that have an exact length of 5. For a regular English dictionary, this is still a large amount of words. For your reference, here are some examples of time required to run through an entire list of names:
+The default configuration is very conservative and only runs valid usernames that have an exact length of 5 characters. For a regular English dictionary, this is still a large amount of words (likely thousands). For your reference, here are some examples of time required to run through an entire list of names:
 
 | Words  | sleep_seconds | Hours required | Days required |
 | ------ | ------------- | -------------- | ------------- |
 | 10,000 | 6             | 16.6           |               |
 |100,000 | 6             |                | 6.9           |
+
+If you accept longer names, the limit is easily changed in the script from `== 5` to, for example `<= 7`.
+
+### Why is it so slow?
+
+If you run queries faster than what the script limits you to, twitter will rate-limit you. Therefore, the script has a pause between every query. If you have less than 200 queries, you could change the timer in the script:
+
+`sleep_seconds = 6`
 
 ## License
 
