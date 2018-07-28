@@ -1,6 +1,6 @@
 # murder
 
-A group of crows is called a "murder". A crow is a bird. Twitter's logo is a bird. Is it a stupid name? Let me know in six months if you remembered it. This script will take an input file containing one name per row, and try all names against the twitter API for availability.
+A group of crows is called a "murder". A crow is a bird. Twitter's logo is a bird. Is it a stupid name? Let me know in six months if you remembered it. This script will take an input file containing one name per row, validate them, and try them against the twitter API for availability.
 
 ## Getting Started
 
