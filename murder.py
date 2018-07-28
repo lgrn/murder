@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# murder 0.2.1
+# murder 0.2.2
 
 import time
 import requests
@@ -38,13 +38,14 @@ sys.stdout.flush()
 def is_available(username):
     url = ("https://twitter.com/users/username_available"
     "?scribeContext%5Bcomponent%5D=form&scribeContext%5B"
-    "element%5D=screen_name&username=" + username.lower() +
-    "&value=" + username.lower())
+    "element%5D=screen_name&username=" + str(username.lower()) +
+    "&value=" + str(username.lower()))
     response = requests.get(url)
     try:
         data = json.loads(response.text)
-    except Exception:
-        print('[  JSON!  ] Malformed JSON detected: ', response.text)
+    except:
+        print('[  JSON!  ] Malformed JSON detected when checking: ')
+        print(url)
         pass
     
     if data.get("reason") == "available":
@@ -76,6 +77,11 @@ def write_available(i):
     f.write(i)
     f.close()
 
+def write_unavailable(i):
+    f = open("unavailable.txt", "a")
+    f.write(i)
+    f.close()
+
 failed_tries = 0
 ok_tries = 0
 
@@ -103,16 +109,17 @@ for i in clean_lines:
     if is_available(i):
         print("[AVAILABLE] '{}'! Saving to output.txt, stalling for next API call.".format(i.lower()))
         ok_tries += 1
-        write_available(i)
+        write_available(i + '\n')
         sys.stdout.flush()
         time.sleep(sleep_seconds)
     else:
         print("[  TAKEN  ] '{}'. Too bad. Stalling for next API call.".format(i.lower()))
         failed_tries += 1
         #delete_row(i)
+        write_unavailable(i + '\n')
         time.sleep(sleep_seconds)
 
 total_tries = failed_tries + ok_tries
 
-print("Script finished. Twitter was hit with {} queries. We found {} available names, saved to output.txt".format(total_tries,ok_tries))
-
+print("Script finished. Twitter was hit with "
+      "{} queries. We found {} available names, saved to output.txt".format(total_tries,ok_tries))
