@@ -1,5 +1,3 @@
-input.txt
-output.txt
-unavailable.txt
+*.txt
 *.ipynb
 .vscode
