@@ -127,6 +127,8 @@ if unavailable_lines:
 
 # NOTE: time.sleep waits because twitter has a rate limit of 150/15min (?) <- bad guess
 
+print("[>>>>>>>>>] Making API calls now." + "\n")
+
 sleep_seconds = 10
 
 for i in clean_lines:
