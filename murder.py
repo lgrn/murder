@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# murder 0.2.2
+# murder 0.2.3
 
 import time
 import requests
@@ -23,9 +23,18 @@ filename = "input.txt"
 with open(filename) as f:
      lines = [line.strip().strip('\n') for line in open(filename)]
 
+unavailable_filename = "unavailable.txt"
+
+try:
+    with open(unavailable_filename) as f:
+        unavailable_lines = [line.strip().strip('\n') for line in open(unavailable_filename)]     
+except FileNotFoundError:
+    print("\nunavailable.txt was not found. That's fine, probably there wasn't a previous run.")
+
+
 pretty_amount = "{:,}".format(len(lines))
 
-print("\nImported {} words from {}.".format(pretty_amount,filename))
+print("\n[>>>>>>>>>] Imported {} words from {}.".format(pretty_amount,filename))
 
 # This regex pattern validates usernames.
 
@@ -43,12 +52,15 @@ def is_available(username):
     response = requests.get(url)
     try:
         data = json.loads(response.text)
-    except:
-        print('[  JSON!  ] Malformed JSON detected when checking: ')
+        reason = data.get("reason")
+    except UnboundLocalError:
+        print('[  JSON!  ] Twitter refused to give us a decent response for this request: ')
         print(url)
+        print('[  JSON!  ] Assuming its unavailable and attempting to move on.')
+        reason = "unavailable"
         pass
     
-    if data.get("reason") == "available":
+    if reason == "available":
         return True
     else:
         return False
@@ -97,26 +109,41 @@ for i in lines:
 # NOTE: "Compliant" below is decided by the for loop above.
         
 pretty_amount = "{:,}".format(len(clean_lines))
-print("Cleaned up import to only include compliant words. We now have {} words.".format(pretty_amount) + "\n")
+print("[>>>>>>>>>] Cleaned up import to only include compliant words. We now have {} words.".format(pretty_amount) + "\n")
+
+# unavailable_lines
+
+try:
+    for i in unavailable_lines:
+        if i in clean_lines:
+            clean_lines.remove(i)
+            print("[ CLEANUP ] '{}' will not be checked, we already know it's taken.".format(i.lower()))
+except NameError:
+    # If there wasn't a previous run, this won't exist. That's fine.
+    pass
+
+if unavailable_lines:
+    pretty_amount = "{:,}".format(len(clean_lines))
+    print("[>>>>>>>>>] After cross-checking unavailable.txt we are down to {} words.".format(pretty_amount) + "\n")
 
 # NOTE: time.sleep waits because twitter has a rate limit of 200/15min (?), 
 # so this will run at most 90 (less than half) in that same period.
 
-sleep_seconds = 8
+sleep_seconds = 6
 
 for i in clean_lines:
     sys.stdout.flush()
     if is_available(i):
         print("[AVAILABLE] '{}'! Saving to output.txt, stalling for next API call.".format(i.lower()))
         ok_tries += 1
-        write_available(i + '\n')
+        write_available(i.lower() + '\n')
         sys.stdout.flush()
         time.sleep(sleep_seconds)
     else:
         print("[  TAKEN  ] '{}'. Too bad. Stalling for next API call.".format(i.lower()))
         failed_tries += 1
         #delete_row(i)
-        write_unavailable(i + '\n')
+        write_unavailable(i.lower() + '\n')
         time.sleep(sleep_seconds)
 
 total_tries = failed_tries + ok_tries
