@@ -11,12 +11,6 @@ import sys
 # Your "filename" file should contain one word per row. Don't worry about
 # newlines and whitespace, it will be stripped. Any names containing anything
 # but A-Z/a-z, underscores and numbers will be skipped and not queried.
-# 
-# Example: 
-
-# gagarin <- query
-# uber    <- query
-# über    <- skip
 
 filename = "input.txt"
 
@@ -59,7 +53,15 @@ def is_available(username):
         print('[  JSON!  ] Assuming its unavailable and attempting to move on.')
         reason = "unavailable"
         pass
-    
+    except ValueError:
+        print('[  JSON!  ] UH-OH! You\'re probably being rate limited :( ) ')
+        print('[  JSON!  ] You should stop for now and/or adjust your sleep_timer ) ')
+        print('[  JSON!  ] ValueError for this request: ')
+        print(url)
+        print('[  JSON!  ] Assuming its unavailable and attempting to move on.')
+        reason = "unavailable"
+        pass
+
     if reason == "available":
         return True
     else:
@@ -126,10 +128,9 @@ if unavailable_lines:
     pretty_amount = "{:,}".format(len(clean_lines))
     print("[>>>>>>>>>] After cross-checking unavailable.txt we are down to {} words.".format(pretty_amount) + "\n")
 
-# NOTE: time.sleep waits because twitter has a rate limit of 200/15min (?), 
-# so this will run at most 90 (less than half) in that same period.
+# NOTE: time.sleep waits because twitter has a rate limit of 150/15min (?) <- bad guess
 
-sleep_seconds = 6
+sleep_seconds = 10
 
 for i in clean_lines:
     sys.stdout.flush()

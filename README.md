@@ -22,8 +22,8 @@ The default configuration is very conservative and only runs valid usernames tha
 
 | Words  | sleep_seconds | Hours required | Days required |
 | ------ | ------------- | -------------- | ------------- |
-| 10,000 | 6             | 16.6           |               |
-|100,000 | 6             |                | 6.9           |
+| 10,000 | 10            | 27.8           |               |
+|100,000 | 10            |                | 11.6          |
 
 If you accept longer names, the limit is easily changed in the script from `== 5` to, for example `<= 7`.
 
@@ -31,7 +31,7 @@ If you accept longer names, the limit is easily changed in the script from `== 5
 
 If you run queries faster than what the script limits you to, twitter will rate-limit you. Therefore, the script has a pause between every query. If you have less than 200 queries, you could change the timer in the script:
 
-`sleep_seconds = 6`
+`sleep_seconds = 10`
 
 ## License
 
