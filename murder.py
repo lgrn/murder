@@ -25,7 +25,7 @@ with open(filename) as f:
 
 pretty_amount = "{:,}".format(len(lines))
 
-print("Step 1: Imported {} words from {}.".format(pretty_amount,filename))
+print("\nImported {} words from {}.".format(pretty_amount,filename))
 
 # This regex pattern validates usernames.
 
@@ -97,7 +97,7 @@ for i in lines:
 # NOTE: "Compliant" below is decided by the for loop above.
         
 pretty_amount = "{:,}".format(len(clean_lines))
-print("Step 2: Cleaned up import to only include compliant words. We now have {} words.".format(pretty_amount))
+print("Cleaned up import to only include compliant words. We now have {} words.".format(pretty_amount) + "\n")
 
 # NOTE: time.sleep waits because twitter has a rate limit of 200/15min (?), 
 # so this will run at most 90 (less than half) in that same period.
