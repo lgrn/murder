@@ -14,36 +14,20 @@ One way to look for short, memorable names is to generate an input file from dic
 
 ### Running the script
 
-The script takes no parameters. It expects `input.txt` in the same folder, and will print to STDOUT. If matches are found, they are appended to `output.txt`.
-
-### Example usage
-
-```
-> python .\murder.py
-Step 1: Imported 180,165 words from input.txt.
-Step 2: Cleaned up import to only include compliant words. We now have 9,083 words.
-[  TAKEN  ] 'abaft'. Too bad. Stalling for next API call.
-[  TAKEN  ] 'abaka'. Too bad. Stalling for next API call.
-[  TAKEN  ] 'abama'. Too bad. Stalling for next API call.
-[  TAKEN  ] 'abamp'. Too bad. Stalling for next API call.
-[  TAKEN  ] 'abana'. Too bad. Stalling for next API call.
-(...)
-```
-
-This is really as fun as it gets.
+The script takes no parameters. It expects `input.txt` in the same folder, and will print to STDOUT. If matches are found, they are appended to `output.txt`. If a name is detected to be unavailable, it will be saved to `unavailable.txt`. If this file exists when the script is run, any entries in it will be disregarded before making API calls.
 
 ### Why is it so slow?
 
 If you run queries faster than what the script limits you to, twitter will rate-limit you. Therefore, the script has a pause between every query. If you have less than 200 queries, you could change the timer in the script:
 
-`sleep_seconds = 8`
+`sleep_seconds = 6`
 
-Some examples of time required:
+The default configuration is very conservative and only runs valid usernames that have an exact length of 5. For a regular English dictionary, this is still a large amount of words. For your reference, here are some examples of time required to run through an entire list of names:
 
 | Words  | sleep_seconds | Hours required | Days required |
 | ------ | ------------- | -------------- | ------------- |
-| 10,000 | 8             | 22.2           |               |
-|100,000 | 8             |                | 9.2           |
+| 10,000 | 6             | 16.6           |               |
+|100,000 | 6             |                | 6.9           |
 
 ## License
 
