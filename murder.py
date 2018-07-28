@@ -14,8 +14,13 @@ import sys
 
 filename = "input.txt"
 
-with open(filename) as f:
-     lines = [line.strip().strip('\n') for line in open(filename)]
+try:
+    with open(filename) as f:
+        lines = [line.strip().strip('\n').lower() for line in open(filename)]
+        lines = list(set(lines))
+except FileNotFoundError:
+    print("For this script to work, {} needs to exist in the working directory. Exiting.".format(filename))
+    raise SystemExit
 
 unavailable_filename = "unavailable.txt"
 
@@ -23,7 +28,15 @@ try:
     with open(unavailable_filename) as f:
         unavailable_lines = [line.strip().strip('\n') for line in open(unavailable_filename)]     
 except FileNotFoundError:
-    print("\nunavailable.txt was not found. That's fine, probably there wasn't a previous run.")
+    print("\n{} was not found. That's fine, probably there wasn't a previous run.".format(unavailable_filename))
+
+available_filename = "output.txt"
+
+try:
+    with open(available_filename) as f:
+        available_lines = [line.strip().strip('\n') for line in open(available_filename)]     
+except FileNotFoundError:
+    print("\n{} was not found. That's fine, probably there wasn't a previous run.".format(available_filename))
 
 
 pretty_amount = "{:,}".format(len(lines))
@@ -58,30 +71,12 @@ def is_available(username):
         print('[  JSON!  ] You should stop for now and/or adjust your sleep_timer ) ')
         print('[  JSON!  ] ValueError for this request: ')
         print(url)
+        raise SystemExit
 
     if reason == "available":
         return True
     else:
         return False
-
-# This function deletes any name that we already checked from input.txt.
-# It opens the file, reads all lines, and writes back all but one line.
-# It feels a lot like making a cake with a hammer and a blow torch,
-# but I'm not good with computers.
-
-# def delete_row(r):
-    # f = open("input.txt", "r")
-    # lines = f.readlines()
-    # f.close()
-    # f = open("input.txt", "w")
-    # for line in lines:
-        # if line != r + "\n":
-            # f.write(line)
-
-# delete_row hammers IO so it's disabled by default, it was introduced
-# in 0.1 and I am ashamed of it on a daily basis.
-
-# write_available below will be used in case of AVAILABLE
 
 def write_available(i):
     f = open("output.txt", "a")
@@ -110,20 +105,27 @@ for i in lines:
 pretty_amount = "{:,}".format(len(clean_lines))
 print("[>>>>>>>>>] Cleaned up import to only include compliant words. We now have {} words.".format(pretty_amount) + "\n")
 
-# unavailable_lines
+# Clean the array further by removing already checked names (failed and succeeded).
 
 try:
     for i in unavailable_lines:
         if i in clean_lines:
             clean_lines.remove(i)
             print("[ CLEANUP ] '{}' will not be checked, we already know it's taken.".format(i.lower()))
+    for i in available_lines:
+        if i in clean_lines:
+            clean_lines.remove(i)
+            print("[ CLEANUP ] '{}' will not be checked, we already know it's available.".format(i.lower()))
 except NameError:
     # If there wasn't a previous run, this won't exist. That's fine.
     pass
 
-if unavailable_lines:
-    pretty_amount = "{:,}".format(len(clean_lines))
-    print("[>>>>>>>>>] After cross-checking unavailable.txt we are down to {} words.".format(pretty_amount) + "\n")
+try:
+    if unavailable_lines:
+        pretty_amount = "{:,}".format(len(clean_lines))
+        print("[>>>>>>>>>] After cross-checking unavailable.txt we are down to {} words.".format(pretty_amount) + "\n")
+except NameError:
+    pass
 
 # NOTE: time.sleep waits because twitter has a rate limit of 150/15min (?) <- bad guess
 
