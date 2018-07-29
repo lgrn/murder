@@ -127,7 +127,7 @@ except NameError:
 try:
     if unavailable_lines or available_lines:
         pretty_amount = "{:,}".format(len(clean_lines))
-        print("[>>>>>>>>>] After cross-checking un/available txt files we are down to {} words.".format(pretty_amount) + "\n")
+        print("[>>>>>>>>>] Done cross-checking txt files from previous runs, we now have {} words.".format(pretty_amount) + "\n")
 except NameError:
     pass
 
