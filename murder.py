@@ -25,6 +25,9 @@ try:
 except FileNotFoundError:
     print("For this script to work, {} needs to exist in the working directory. Exiting.".format(filename))
     raise SystemExit
+except UnicodeDecodeError:
+    print("Oops! {} isn't UTF-8. Convert it, for example by running iconv. Exiting.".format(filename))
+    raise SystemExit
 
 unavailable_filename = "unavailable.txt"
 
