@@ -2,11 +2,15 @@
 
 # murder 0.2.3
 
+import sys
+if sys.version_info[0] != (3):
+    sys.stdout.write("Sorry this software requires Python 3. This is Python {}.\n".format(sys.version_info[0]))
+    sys.exit(1)
+
 import time
 import requests
 import json
 import re
-import sys
 
 # Your "filename" file should contain one word per row. Don't worry about
 # newlines and whitespace, it will be stripped. Any names containing anything
